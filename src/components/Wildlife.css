@@ -1,0 +1,375 @@
+.wildlife-container {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f8fffe 0%, #f0f8f0 100%);
+  min-height: 100vh;
+}
+
+.wildlife-header {
+  text-align: center;
+  margin-bottom: 50px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wildlife-header h1 {
+  font-size: 3.2em;
+  margin-bottom: 20px;
+  background: linear-gradient(45deg, #2f4f2f, #9acd32, #228b22);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.subtitle {
+  font-size: 1.3em;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.filters-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: linear-gradient(145deg, #ffffff, #f0f8f0);
+  border: 2px solid transparent;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  color: #2f4f2f;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(47, 79, 47, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #9acd32, #228b22);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.filter-btn:hover::before,
+.filter-btn.active::before {
+  left: 0;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(154, 205, 50, 0.3);
+  border-color: transparent;
+}
+
+.results-count {
+  color: #666;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.animal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.animal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(47, 79, 47, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(154, 205, 50, 0.1);
+}
+
+.animal-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(47, 79, 47, 0.15);
+}
+
+.card-image-container {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.animal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.animal-card:hover .animal-image {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.animal-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.tag {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tag.big-five {
+  background: linear-gradient(45deg, #ff6b35, #f7931e);
+  color: #ffffff;
+}
+
+.tag.predator {
+  background: linear-gradient(45deg, #dc2626, #991b1b);
+  color: #ffffff;
+}
+
+.tag.herbivore {
+  background: linear-gradient(45deg, #9acd32, #228b22);
+  color: #ffffff;
+}
+
+.tag.mountain {
+  background: linear-gradient(45deg, #4b5e7e, #2f3e5e);
+  color: #ffffff;
+}
+
+.tag.crater {
+  background: linear-gradient(45deg, #8b4513, #5e2d0b);
+  color: #ffffff;
+}
+
+.tag.valley {
+  background: linear-gradient(45deg, #6b7280, #4b5563);
+  color: #ffffff;
+}
+
+.tag.lake {
+  background: linear-gradient(45deg, #0284c7, #0369a1);
+  color: #ffffff;
+}
+
+.tag.plains {
+  background: linear-gradient(45deg, #a3e635, #65a30d);
+  color: #ffffff;
+}
+
+.tag.gorge {
+  background: linear-gradient(45deg, #854d0e, #713f12);
+  color: #ffffff;
+}
+
+.tag.island {
+  background: linear-gradient(45deg, #14b8a6, #0d9488);
+  color: #ffffff;
+}
+
+.card-content {
+  padding: 25px;
+}
+
+.animal-name {
+  font-size: 1.6em;
+  margin-bottom: 12px;
+  color: #2f4f2f;
+  font-weight: 600;
+}
+
+.animal-description {
+  font-size: 1em;
+  margin-bottom: 20px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.animal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #2f4f2f;
+  font-size: 0.9em;
+}
+
+.detail-value {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-badge.critical {
+  background: linear-gradient(45deg, #dc2626, #991b1b);
+  color: #ffffff;
+}
+
+.status-badge.endangered {
+  background: linear-gradient(45deg, #ea580c, #c2410c);
+  color: #ffffff;
+}
+
+.status-badge.vulnerable {
+  background: linear-gradient(45deg, #f59e0b, #d97706);
+  color: #ffffff;
+}
+
+.status-badge.near-threatened {
+  background: linear-gradient(45deg, #eab308, #ca8a04);
+  color: #ffffff;
+}
+
+.status-badge.stable {
+  background: linear-gradient(45deg, #9acd32, #228b22);
+  color: #ffffff;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.no-results h3 {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #2f4f2f;
+}
+
+.no-results p {
+  font-size: 1.1em;
+  color: #888;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wildlife-container {
+    padding: 40px 15px;
+  }
+  
+  .wildlife-header h1 {
+    font-size: 2.5em;
+  }
+  
+  .subtitle {
+    font-size: 1.1em;
+  }
+  
+  .filters-section {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .filters {
+    justify-content: center;
+  }
+  
+  .animal-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .filter-btn {
+    padding: 10px 20px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .wildlife-header h1 {
+    font-size: 2em;
+  }
+  
+  .card-content {
+    padding: 20px;
+  }
+  
+  .animal-name {
+    font-size: 1.4em;
+  }
+}
