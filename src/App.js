@@ -110,6 +110,18 @@ import SixDaysSafari from './components/6days';
 import FiveDaysSafari from './components/5days';
 
 import FiveDaysBestSafari from './components/5daysbest';
+import FourDays from './components/4days'
+import ThreeDaySerengeti from './components/3dayserengenti';
+import SerengetiNgorongoro from './components/serengetingorongoro';
+import TarangireNgorongoro from './components/tangirengorongoro'
+import TarangireOneDay from './components/tarangire1day'; 
+
+import ZanzibarHoneymoon from './components/zanzibarhoneymoon'
+import ZanzibarIsland from './components/zanzibarisland'
+import PrisonMnembaZanzibar from './components/prisonmnemba'
+import ZanzibarTour from './components/6daytour';
+import ZanzibarSafariBlue from './components/ZanzibarSafariBlue';
+import ZanzibarTour2 from './components/ZanzibarStoneTown';
 
 function App() {
   return (
@@ -189,6 +201,20 @@ function App() {
             <Route path="/destinations/5days" element={<FiveDaysSafari />} />
 
             <Route path="/destinations/5daysbest" element={<FiveDaysBestSafari />} />
+            <Route path="/destinations/4days" element={<FourDays />} /> 
+            <Route path="/destinations/3dayserengenti" element={<ThreeDaySerengeti />} />
+            <Route path="/destinations/serengetingorongoro" element={<SerengetiNgorongoro />} />
+            <Route path="/destinations/Tangirengorongoro" element={<TarangireNgorongoro />} />
+            <Route path="/destinations/tarangire1day" element={<TarangireOneDay />} />
+
+            <Route path="/destinations/zanzibarhoneymoon" element={<ZanzibarHoneymoon />} />
+            <Route path="/destinations/zanzibarisland" element={<ZanzibarIsland />} />
+            <Route path="/destinations/prisonmnemba" element={<PrisonMnembaZanzibar />} />
+            <Route path="/destinations/6daytour" element={<ZanzibarTour />} />
+            <Route path="/destinations/ZanzibarSafariBlue" element={<ZanzibarSafariBlue />} />
+            <Route path="/destinations/ZanzibarStoneTown" element={<ZanzibarTour2 />} />
+
+            
              
           </Routes>
           <Footer />
