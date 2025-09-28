@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Tanzania Yetu Tourism</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #228b22, #9acd32);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-message {
+            font-size: 18px;
+            color: #2f4f2f;
+            margin-bottom: 20px;
+        }
+        .confirm-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #228b22, #9acd32);
+            color: white !important;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        .confirm-button:hover {
+            transform: translateY(-2px);
+        }
+        .features {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .features h3 {
+            color: #2f4f2f;
+            margin-top: 0;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+        }
+        .icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .step-number {
+            background: #228b22;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .footer {
+            background-color: #2f4f2f;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #9acd32;
+            text-decoration: none;
+        }
+        .contact-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .logo-area {
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">TANZANIA YETU TOURISM</div>
+            <h1>Welcome to Your Safari Adventure</h1>
+            <p>Professional Wildlife & Cultural Tours</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <div class="welcome-message">
+                <strong>Karibu! (Welcome!)</strong> Thank you for choosing Tanzania Yetu Tourism for your safari adventure.
+            </div>
+            
+            <p>Dear Valued Guest,</p>
+            
+            <p>We're thrilled that you've decided to explore the breathtaking wildlife and landscapes of Tanzania with us. To complete your booking and secure your spot on this incredible journey, please confirm your email address by clicking the button below:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ .ConfirmationURL }}" class="confirm-button">
+                    Confirm Your Account & Complete Booking
+                </a>
+            </div>
+            
+            <!-- What's Next -->
+            <div class="features">
+                <h3>What happens next?</h3>
+                <div class="feature-item">
+                    <span class="step-number">1</span>
+                    <span>Confirm your email to activate your account</span>
+                </div>
+                <div class="feature-item">
+                    <span class="step-number">2</span>
+                    <span>Complete your booking with your preferred dates</span>
+                </div>
+                <div class="feature-item">
+                    <span class="step-number">3</span>
+                    <span>Our team will contact you within 24 hours</span>
+                </div>
+                <div class="feature-item">
+                    <span class="step-number">4</span>
+                    <span>Get ready for the adventure of a lifetime!</span>
+                </div>
+            </div>
+            
+            <!-- What You'll Experience -->
+            <div style="background: linear-gradient(135deg, #f0f8f0, #e8f5e8); padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="color: #2f4f2f; margin-top: 0;">Your Tanzania Adventure Includes:</h3>
+                <div class="feature-item">
+                    <svg class="icon" viewBox="0 0 24 24" fill="#228b22">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span><strong>Big Five Safari:</strong> Lions, Elephants, Leopards, Rhinos & Buffalo</span>
+                </div>
+                <div class="feature-item">
+                    <svg class="icon" viewBox="0 0 24 24" fill="#228b22">
+                        <path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z"/>
+                    </svg>
+                    <span><strong>Iconic Destinations:</strong> Serengeti, Ngorongoro Crater, Tarangire</span>
+                </div>
+                <div class="feature-item">
+                    <svg class="icon" viewBox="0 0 24 24" fill="#228b22">
+                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.5 8H16c-.8 0-1.56.31-2.12.88L12 11.5v3.5c0 .55-.45 1-1 1s-1-.45-1-1v-4l-4.5-2.25V8c0-.55-.45-1-1-1s-1 .45-1 1v1.75L9 12.5V22h2v-6h2v6h4z"/>
+                    </svg>
+                    <span><strong>Expert Local Guides:</strong> Born and raised in Tanzania</span>
+                </div>
+                <div class="feature-item">
+                    <svg class="icon" viewBox="0 0 24 24" fill="#228b22">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span><strong>Authentic Experiences:</strong> Cultural visits & traditional meals</span>
+                </div>
+            </div>
+            
+            <p><strong>Need help or have questions?</strong><br>
+            Our professional team is here to assist you! Reply to this email or contact us:</p>
+            
+            <div class="contact-info">
+                <strong>Phone:</strong> +256 766 089 652<br>
+                <strong>Email:</strong> tanzaniayetu@gmail.com<br>
+                <strong>WhatsApp:</strong> <a href="https://wa.me/256766089652">Chat with us instantly</a>
+            </div>
+            
+            <p style="margin-top: 30px;">We can't wait to show you the wonders of Tanzania!</p>
+            
+            <p><strong>Asante sana (Thank you very much!)</strong><br>
+            <strong>The Tanzania Yetu Tourism Team</strong><br>
+            <em>"Discover the Wild Beauty of Tanzania"</em></p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Tanzania Yetu Tourism</strong><br>
+            Arusha, Tanzania | Licensed Tour Operator</p>
+            
+            <p>Follow our adventures:<br>
+            <a href="https://facebook.com/tanzaniayetutravels">Facebook</a> | 
+            <a href="https://twitter.com/tanzaniayetu">Twitter</a> | 
+            <a href="https://tiktok.com/@tanzaniayetutravels">TikTok</a></p>
+            
+            <p style="font-size: 12px; opacity: 0.8; margin-top: 20px;">
+                This email was sent because you created an account on our website.<br>
+                If you didn't create an account, you can safely ignore this email.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

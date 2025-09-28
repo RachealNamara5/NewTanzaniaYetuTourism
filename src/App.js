@@ -96,6 +96,11 @@ import Booking from './components/Booking';
 import AboutUs from './components/AboutUs';
 import Destinations from './components/Destinations';
 
+// Providers
+import { QueryProvider } from './providers/QueryProvider';
+import { AuthProvider } from './contexts/AuthContext';
+import { Toaster } from 'react-hot-toast';
+
 
 
 import Serengeti from './components/serengeti';
@@ -113,8 +118,10 @@ import FiveDaysBestSafari from './components/5daysbest';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
+    <QueryProvider>
+      <AuthProvider>
+        <Router>
+          <div className="App">
         {/* Top Bar */}
         <div className="top-bar">
           <div className="social-icons">
@@ -194,7 +201,10 @@ function App() {
           <Footer />
         </div>
       </div>
+      <Toaster position="top-right" />
     </Router>
+      </AuthProvider>
+    </QueryProvider>
   );
 }
 

@@ -470,76 +470,119 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useBookings } from '../hooks/useBookings';
+import { useServices } from '../hooks/useServices';
 
 function Booking() {
   const navigate = useNavigate();
-  const [step, setStep] = useState('login'); // login, verify, booking
+  const { user, signUp, signIn, isAuthenticated } = useAuth();
+  const { services } = useServices();
+  const { createBooking, isCreating } = useBookings();
+  
+  const [step, setStep] = useState('login');
+  
+  // Update step when authentication changes
+  React.useEffect(() => {
+    console.log('🔐 Auth state changed:', { isAuthenticated, user })
+    if (isAuthenticated && user) {
+      setStep('booking')
+    } else {
+      setStep('login')
+    }
+  }, [isAuthenticated, user]);
   const [loginData, setLoginData] = useState({
     email: '',
+    password: '',
+    confirmPassword: '',
     contact: '',
     location: '',
     name: ''
   });
-  const [verificationCode, setVerificationCode] = useState('');
   const [bookingData, setBookingData] = useState({
-    service: '',
+    service_id: '',
     startDate: '',
     endDate: '',
     guests: 1,
     specialRequests: ''
   });
   const [error, setError] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
 
-  const services = [
-    'Safari Adventures',
-    'Photography Tours',
-    'Cultural Experiences',
-    'Group & Private Tours',
-    'Camping Safaris',
-    'Bird Watching'
-  ];
-
-  const handleLoginSubmit = (e) => {
+  const handleAuthSubmit = async (e) => {
     e.preventDefault();
-    // Basic validation
-    if (!loginData.email || !loginData.contact || !loginData.location || !loginData.name) {
-      setError('Please fill in all fields');
-      return;
-    }
-    if (!/^\S+@\S+\.\S+$/.test(loginData.email)) {
-      setError('Please enter a valid email');
-      return;
-    }
-    if (!/^\+?\d{10,12}$/.test(loginData.contact)) {
-      setError('Please enter a valid phone number');
-      return;
-    }
     setError('');
-    // Simulate sending verification code
-    setStep('verify');
-  };
 
-  const handleVerifySubmit = (e) => {
-    e.preventDefault();
-    // Simulate verification (in a real app, this would check against a backend)
-    if (verificationCode.length === 6) {
-      setError('');
+    // Basic validation
+    if (!loginData.email || !loginData.name) {
+      setError('Please fill in required fields');
+      return;
+    }
+
+    if (!isLogin && loginData.password !== loginData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    try {
+      let result;
+      console.log('🔐 Attempting authentication:', { isLogin, email: loginData.email })
+      
+      if (isLogin) {
+        result = await signIn(loginData.email, loginData.password);
+      } else {
+        result = await signUp(loginData.email, loginData.password, {
+          full_name: loginData.name,
+          phone: loginData.contact,
+          location: loginData.location
+        });
+      }
+
+      console.log('🔐 Auth result:', result)
+
+      if (result.success) {
+        console.log('✅ Authentication successful, moving to booking step')
       setStep('booking');
     } else {
-      setError('Please enter a valid 6-digit code');
+        setError(result.error?.message || 'Authentication failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('❌ Authentication error:', error)
+      setError('Authentication failed. Please try again.');
     }
   };
 
-  const handleBookingSubmit = (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     // Basic validation
-    if (!bookingData.service || !bookingData.startDate || !bookingData.endDate) {
+    if (!bookingData.service_id || !bookingData.startDate || !bookingData.endDate) {
       setError('Please fill in all required fields');
       return;
     }
-    // Simulate booking submission
-    alert('Booking submitted successfully!');
+
+    if (new Date(bookingData.startDate) >= new Date(bookingData.endDate)) {
+      setError('End date must be after start date');
+      return;
+    }
+
+    try {
+      const booking = {
+        user_id: user.id,
+        service_id: bookingData.service_id,
+        start_date: bookingData.startDate,
+        end_date: bookingData.endDate,
+        guests: parseInt(bookingData.guests),
+        special_requests: bookingData.specialRequests,
+        status: 'pending'
+      };
+
+      createBooking(booking);
     navigate('/'); // Redirect to home page after booking
+    } catch (error) {
+      setError('Failed to submit booking. Please try again.');
+    }
   };
 
   return (
@@ -578,14 +621,32 @@ function Booking() {
               marginBottom: '30px',
               color: '#9acd32'
             }}>
-              Login to Book Your Adventure
+              {isLogin ? 'Login to Book Your Adventure' : 'Create Account to Book'}
             </h2>
+            
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#9acd32',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  fontSize: '1rem'
+                }}
+              >
+                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
+              </button>
+            </div>
+
             {error && (
               <p style={{ color: '#ff6b6b', textAlign: 'center', marginBottom: '20px' }}>
                 {error}
               </p>
             )}
-            <form onSubmit={handleLoginSubmit}>
+            <form onSubmit={handleAuthSubmit}>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
                   Name
@@ -628,12 +689,13 @@ function Booking() {
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                  Contact Number
+                  Password
                 </label>
                 <input
-                  type="tel"
-                  value={loginData.contact}
-                  onChange={(e) => setLoginData({ ...loginData, contact: e.target.value })}
+                  type="password"
+                  value={loginData.password}
+                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                  required
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -643,17 +705,61 @@ function Booking() {
                     color: 'white',
                     fontSize: '1rem'
                   }}
-                  placeholder="Enter your phone number (e.g., +255123456789)"
+                  placeholder="Enter your password"
                 />
               </div>
+              
+              {!isLogin && (
+                <>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                  Location
+                      Confirm Password
+                </label>
+                <input
+                      type="password"
+                      value={loginData.confirmPassword}
+                      onChange={(e) => setLoginData({ ...loginData, confirmPassword: e.target.value })}
+                      required
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '10px',
+                    border: '1px solid #9acd32',
+                    background: 'rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    fontSize: '1rem'
+                  }}
+                      placeholder="Confirm your password"
+                />
+              </div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                      Contact Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={loginData.contact}
+                      onChange={(e) => setLoginData({ ...loginData, contact: e.target.value })}
+                style={{
+                  width: '100%',
+                        padding: '12px',
+                        borderRadius: '10px',
+                        border: '1px solid #9acd32',
+                        background: 'rgba(255, 255, 255, 0.2)',
+                        color: 'white',
+                        fontSize: '1rem'
+                      }}
+                      placeholder="Enter your phone number (e.g., +255123456789)"
+                    />
+                  </div>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                      Location
                 </label>
                 <input
                   type="text"
-                  value={loginData.location}
-                  onChange={(e) => setLoginData({ ...loginData, location: e.target.value })}
+                      value={loginData.location}
+                      onChange={(e) => setLoginData({ ...loginData, location: e.target.value })}
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -663,11 +769,14 @@ function Booking() {
                     color: 'white',
                     fontSize: '1rem'
                   }}
-                  placeholder="Enter your city/country"
+                      placeholder="Enter your city/country"
                 />
               </div>
+                </>
+              )}
               <button
                 type="submit"
+                disabled={isCreating}
                 style={{
                   background: '#9acd32',
                   color: '#2f4f2f',
@@ -679,93 +788,26 @@ function Booking() {
                   cursor: 'pointer',
                   width: '100%',
                   transition: 'all 0.3s ease',
-                  boxShadow: '0 5px 15px rgba(154, 205, 50, 0.3)'
+                  boxShadow: '0 5px 15px rgba(154, 205, 50, 0.3)',
+                  opacity: isCreating ? 0.7 : 1
                 }}
                 onMouseEnter={(e) => {
+                  if (!isCreating) {
                   e.target.style.transform = 'translateY(-3px)';
                   e.target.style.boxShadow = '0 8px 25px rgba(154, 205, 50, 0.4)';
+                  }
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.transform = 'translateY(0)';
                   e.target.style.boxShadow = '0 5px 15px rgba(154, 205, 50, 0.3)';
                 }}
               >
-                Send Verification Code
+                {isLogin ? 'Login' : 'Create Account'}
               </button>
             </form>
           </>
         )}
 
-        {step === 'verify' && (
-          <>
-            <h2 style={{
-              fontSize: '2.5rem',
-              fontWeight: 'bold',
-              textAlign: 'center',
-              marginBottom: '30px',
-              color: '#9acd32'
-            }}>
-              Verify Your Account
-            </h2>
-            <p style={{ textAlign: 'center', marginBottom: '20px', opacity: 0.9 }}>
-              A 6-digit code has been sent to {loginData.contact}. Please enter it below.
-            </p>
-            {error && (
-              <p style={{ color: '#ff6b6b', textAlign: 'center', marginBottom: '20px' }}>
-                {error}
-              </p>
-            )}
-            <form onSubmit={handleVerifySubmit}>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                  Verification Code
-                </label>
-                <input
-                  type="text"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    borderRadius: '10px',
-                    border: '1px solid #9acd32',
-                    background: 'rgba(255, 255, 255, 0.2)',
-                    color: 'white',
-                    fontSize: '1rem'
-                  }}
-                  placeholder="Enter 6-digit code"
-                  maxLength="6"
-                />
-              </div>
-              <button
-                type="submit"
-                style={{
-                  background: '#9acd32',
-                  color: '#2f4f2f',
-                  border: 'none',
-                  padding: '15px 30px',
-                  borderRadius: '30px',
-                  fontSize: '1.1rem',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  width: '100%',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 5px 15px rgba(154, 205, 50, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(154, 205, 50, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 5px 15px rgba(154, 205, 50, 0.3)';
-                }}
-              >
-                Verify
-              </button>
-            </form>
-          </>
-        )}
 
         {step === 'booking' && (
           <>
@@ -789,8 +831,9 @@ function Booking() {
                   Select Service
                 </label>
                 <select
-                  value={bookingData.service}
-                  onChange={(e) => setBookingData({ ...bookingData, service: e.target.value })}
+                  value={bookingData.service_id}
+                  onChange={(e) => setBookingData({ ...bookingData, service_id: e.target.value })}
+                  required
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -802,8 +845,10 @@ function Booking() {
                   }}
                 >
                   <option value="">Choose a service</option>
-                  {services.map((service, index) => (
-                    <option key={index} value={service}>{service}</option>
+                  {services && services.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.title} - From ${service.price_from}/day
+                    </option>
                   ))}
                 </select>
               </div>
@@ -888,6 +933,7 @@ function Booking() {
               </div>
               <button
                 type="submit"
+                disabled={isCreating}
                 style={{
                   background: '#9acd32',
                   color: '#2f4f2f',
@@ -899,18 +945,21 @@ function Booking() {
                   cursor: 'pointer',
                   width: '100%',
                   transition: 'all 0.3s ease',
-                  boxShadow: '0 5px 15px rgba(154, 205, 50, 0.3)'
+                  boxShadow: '0 5px 15px rgba(154, 205, 50, 0.3)',
+                  opacity: isCreating ? 0.7 : 1
                 }}
                 onMouseEnter={(e) => {
+                  if (!isCreating) {
                   e.target.style.transform = 'translateY(-3px)';
                   e.target.style.boxShadow = '0 8px 25px rgba(154, 205, 50, 0.4)';
+                  }
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.transform = 'translateY(0)';
                   e.target.style.boxShadow = '0 5px 15px rgba(154, 205, 50, 0.3)';
                 }}
               >
-                Submit Booking
+                {isCreating ? 'Submitting...' : 'Submit Booking'}
               </button>
             </form>
           </>

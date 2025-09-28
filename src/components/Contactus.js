@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useContactSubmission, useMeetingRequest } from '../hooks/useContact';
 
 const Contactus = () => {
+  const { submitContact, isSubmitting: isSubmittingContact } = useContactSubmission();
+  const { submitMeeting, isSubmitting: isSubmittingMeeting } = useMeetingRequest();
+  
   const [submitted, setSubmitted] = useState(false);
   const [meetingSubmitted, setMeetingSubmitted] = useState(false);
   const [showMeetingForm, setShowMeetingForm] = useState(false);
@@ -83,29 +87,41 @@ const Contactus = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const contactData = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.contact,
+      country: formData.country,
+      message: formData.message
+    };
+
+    submitContact(contactData, {
+      onSuccess: () => {
       setSubmitted(true);
       setFormData({ name: '', contact: '', email: '', country: '', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
-    } catch (error) {
-      console.error('Contact Form Error:', error);
-      alert('Failed to send message. Please try again later.');
     }
+    });
   };
 
   const handleMeetingSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const meetingRequestData = {
+      name: meetingData.name,
+      phone: meetingData.contact,
+      preferred_date: meetingData.date
+    };
+
+    submitMeeting(meetingRequestData, {
+      onSuccess: () => {
       setMeetingSubmitted(true);
       setMeetingData({ name: '', contact: '', date: '' });
       setShowMeetingForm(false);
       setTimeout(() => setMeetingSubmitted(false), 5000);
-    } catch (error) {
-      console.error('Meeting Form Error:', error);
-      alert('Failed to schedule meeting. Please try again later.');
     }
+    });
   };
 
   const toggleMeetingForm = () => {
@@ -555,14 +571,20 @@ const Contactus = () => {
 
                   <button
                     type="submit"
+                    disabled={isSubmittingContact}
                     className="w-full text-white px-6 py-3 rounded font-semibold transition-all duration-300 transform hover:scale-[1.02]"
                     style={{
-                      background: 'linear-gradient(45deg, #228b22, #9acd32)'
+                      background: 'linear-gradient(45deg, #228b22, #9acd32)',
+                      opacity: isSubmittingContact ? 0.7 : 1
                     }}
-                    onMouseEnter={(e) => e.target.style.background = 'linear-gradient(45deg, #9acd32, #228b22)'}
+                    onMouseEnter={(e) => {
+                      if (!isSubmittingContact) {
+                        e.target.style.background = 'linear-gradient(45deg, #9acd32, #228b22)';
+                      }
+                    }}
                     onMouseLeave={(e) => e.target.style.background = 'linear-gradient(45deg, #228b22, #9acd32)'}
                   >
-                    Send Message
+                    {isSubmittingContact ? 'Sending...' : 'Send Message'}
                   </button>
                 </form>
 
@@ -729,14 +751,20 @@ const Contactus = () => {
                   
                   <button
                     type="submit"
+                    disabled={isSubmittingMeeting}
                     className="w-full text-white px-6 py-3 rounded font-semibold transition-all duration-300 transform hover:scale-[1.02]"
                     style={{
-                      background: 'linear-gradient(45deg, #228b22, #9acd32)'
+                      background: 'linear-gradient(45deg, #228b22, #9acd32)',
+                      opacity: isSubmittingMeeting ? 0.7 : 1
                     }}
-                    onMouseEnter={(e) => e.target.style.background = 'linear-gradient(45deg, #9acd32, #228b22)'}
+                    onMouseEnter={(e) => {
+                      if (!isSubmittingMeeting) {
+                        e.target.style.background = 'linear-gradient(45deg, #9acd32, #228b22)';
+                      }
+                    }}
                     onMouseLeave={(e) => e.target.style.background = 'linear-gradient(45deg, #228b22, #9acd32)'}
                   >
-                    Schedule Meeting
+                    {isSubmittingMeeting ? 'Scheduling...' : 'Schedule Meeting'}
                   </button>
                 </form>
                 

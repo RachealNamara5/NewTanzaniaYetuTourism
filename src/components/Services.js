@@ -1085,17 +1085,19 @@
 
 // export default Services;
 import React, { useState, useEffect } from 'react';
+import { useServices } from '../hooks/useServices';
 
 const Services = () => {
   const [activeCard, setActiveCard] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { services, isLoading } = useServices();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  const services = [
+  const staticServices = [
     {
       id: 1,
       image: "https://images.unsplash.com/photo-1602410132231-9e6c692e02db?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0",
@@ -1180,6 +1182,28 @@ const Services = () => {
     { number: "98%", label: "Satisfaction Rate" }
   ];
 
+  // Use dynamic services from Supabase, fallback to static data
+  const displayServices = services && services.length > 0 ? services : staticServices;
+
+  if (isLoading) {
+    return (
+      <div className="bg-gray-50 min-h-screen font-sans flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading our amazing services...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Debug info
+  console.log('🎨 Services component render:', { 
+    servicesCount: services?.length, 
+    staticServicesCount: staticServices.length,
+    displayServicesCount: displayServices.length,
+    isLoading 
+  });
+
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       {/* Hero Section */}
@@ -1209,21 +1233,21 @@ const Services = () => {
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-green-800 text-center mb-8">Our Safari Experiences</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {services.map((service) => (
+            {displayServices.map((service) => (
               <div
                 key={service.id}
                 className={`bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${activeCard === service.id ? 'border-2 border-green-600' : ''}`}
                 onMouseEnter={() => setActiveCard(service.id)}
                 onMouseLeave={() => setActiveCard(null)}
               >
-                <img src={service.image} alt={service.title} className="w-full h-48 object-cover" />
+                <img src={service.image || service.image_url} alt={service.title} className="w-full h-48 object-cover" />
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-green-800 mb-2">{service.title}</h3>
                   <p className="text-gray-600 mb-4">{service.description}</p>
                   <div className="mb-4">
                     <h4 className="text-sm font-semibold text-gray-700 mb-2">Includes:</h4>
                     <ul className="list-none space-y-1">
-                      {service.features.map((feature, idx) => (
+                      {service.features && service.features.map((feature, idx) => (
                         <li key={idx} className="text-gray-600 flex items-center">
                           <span className="text-green-600 mr-2">✓</span> {feature}
                         </li>
@@ -1237,7 +1261,9 @@ const Services = () => {
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-gray-500">Price</div>
-                      <div className="font-semibold text-gray-800">{service.price}</div>
+                      <div className="font-semibold text-gray-800">
+                        {service.price || (service.price_from ? `From $${service.price_from}/day` : 'Contact for pricing')}
+                      </div>
                     </div>
                   </div>
                 </div>
