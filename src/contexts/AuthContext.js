@@ -36,6 +36,11 @@ export const AuthProvider = ({ children }) => {
     return () => subscription?.unsubscribe()
   }, [])
 
+  const isEmailVerified = (user) => {
+    // Check if user's email is verified
+    return user?.email_confirmed_at || user?.confirmed_at;
+  };
+
   const signUp = async (email, password, userData) => {
     try {
       setLoading(true)
@@ -64,6 +69,13 @@ export const AuthProvider = ({ children }) => {
       if (error) {
         toast.error(error.message)
         return { success: false, error }
+      }
+
+      // Check if email is verified
+      if (data.user && !isEmailVerified(data.user)) {
+        toast.error('Please verify your email before signing in.')
+        await auth.signOut()
+        return { success: false, error: { message: 'Email not verified' } }
       }
 
       toast.success('Welcome back!')
@@ -102,7 +114,8 @@ export const AuthProvider = ({ children }) => {
     signUp,
     signIn,
     signOut,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    isEmailVerified: isEmailVerified(user)
   }
 
   return (

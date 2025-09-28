@@ -1,6 +1,16 @@
-# Getting Started with Create React App
+# Tanzania Yetu Tourism - React Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a tourism booking website for Tanzania Yetu Tourism, built with React and integrated with Supabase for backend services.
+
+## Recent Fixes
+
+### Authentication and Email Verification Issues Fixed
+
+1. **Account Verification Flow**: Users were being directed to the booking page immediately after signup without verifying their email address.
+2. **Localhost Verification Links**: Email verification links were pointing to localhost instead of the production domain.
+3. **Missing Email Verification Check**: The application was not properly checking if a user's email was verified before allowing access to the booking system.
+
+For detailed information about the fixes, see [FIXES_DOCUMENTATION.md](FIXES_DOCUMENTATION.md).
 
 ## Available Scripts
 

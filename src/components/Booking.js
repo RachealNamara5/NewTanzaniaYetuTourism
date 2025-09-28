@@ -476,7 +476,7 @@ import { useServices } from '../hooks/useServices';
 
 function Booking() {
   const navigate = useNavigate();
-  const { user, signUp, signIn, isAuthenticated } = useAuth();
+  const { user, signUp, signIn, isAuthenticated, isEmailVerified } = useAuth();
   const { services } = useServices();
   const { createBooking, isCreating } = useBookings();
   
@@ -484,13 +484,23 @@ function Booking() {
   
   // Update step when authentication changes
   React.useEffect(() => {
-    console.log('🔐 Auth state changed:', { isAuthenticated, user })
+    console.log('🔐 Auth state changed:', { isAuthenticated, user, isEmailVerified })
     if (isAuthenticated && user) {
-      setStep('booking')
+      // Only proceed to booking if email is verified
+      if (isEmailVerified) {
+        setStep('booking')
+      } else {
+        // Stay on login page and show verification message
+        setStep('login')
+        // Show a toast notification about email verification
+        if (window.shouldShowVerificationMessage) {
+          window.shouldShowVerificationMessage = false;
+        }
+      }
     } else {
       setStep('login')
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, isEmailVerified]);
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -541,9 +551,21 @@ function Booking() {
       console.log('🔐 Auth result:', result)
 
       if (result.success) {
-        console.log('✅ Authentication successful, moving to booking step')
-      setStep('booking');
-    } else {
+        if (isLogin) {
+          // For login, check if email is verified
+          if (result.data.user && (result.data.user.email_confirmed_at || result.data.user.confirmed_at)) {
+            console.log('✅ Authentication successful and email verified, moving to booking step')
+            setStep('booking');
+          } else {
+            setError('Please verify your email address. Check your inbox for the verification email.');
+            // Don't change step, stay on login page
+          }
+        } else {
+          // For signup, user needs to verify email first
+          setError('Please check your email to verify your account before signing in.');
+          // Don't change step, stay on login page
+        }
+      } else {
         setError(result.error?.message || 'Authentication failed. Please try again.');
       }
     } catch (error) {
@@ -707,6 +729,11 @@ function Booking() {
                   }}
                   placeholder="Enter your password"
                 />
+                {!isLogin && (
+                  <p style={{ marginTop: '5px', fontSize: '0.9rem', opacity: 0.8 }}>
+                    After creating your account, you'll receive a verification email. Please verify your email before signing in.
+                  </p>
+                )}
               </div>
               
               {!isLogin && (
