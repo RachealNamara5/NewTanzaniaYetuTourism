@@ -18,19 +18,19 @@ const Destinations = () => {
     ],
     "MORE SAFARI TOURS": [
       { name: "5 Days Best of Tanzania Luxury Safari", path: "/destinations/5daysbest" },
-      { name: "4 Days Tanzania Wildlife Safari", path: "/tours/4-days-tanzania-wildlife-safari" },
-      { name: "3 Days Serengeti National Park Safari", path: "/tours/3-days-serengeti-national-park-safari" },
-      { name: "3 Days Serengeti National Park & Ngorongoro Crater", path: "/tours/3-days-serengeti-ngorongoro-crater" },
-      { name: "3 Days Tarangire & Ngorongoro Crater Safari", path: "/tours/3-days-tarangire-ngorongoro-crater" },
-      { name: "1 Day Tour to Tarangire National Park", path: "/tours/1-day-tarangire-national-park" }
+      { name: "4 Days Tanzania Wildlife Safari", path: "/destinations/4days" },
+      { name: "3 Days Serengeti National Park Safari", path: "/destinations/3dayserengenti" },
+      { name: "3 Days Serengeti National Park & Ngorongoro Crater", path: "/destinations/serengetingorongoro" },
+      { name: "3 Days Tarangire & Ngorongoro Crater Safari", path: "/destinations/tangirengorongoro" },
+      { name: "1 Day Tour to Tarangire National Park", path: "/destinations/tarangire1day" }
     ],
     "ZANZIBAR HOLIDAYS": [
-      { name: "8 Days Zanzibar Honeymoon Holiday", path: "/zanzibar/8-days-zanzibar-honeymoon" },
-      { name: "7 Days Zanzibar Island Holiday", path: "/zanzibar/7-days-zanzibar-island" },
-      { name: "6 Days Prison, Mnemba & Zanzibar Island Tour", path: "/zanzibar/6-days-prison-mnemba-zanzibar" },
-      { name: "6 Days Zanzibar Tour", path: "/zanzibar/6-days-zanzibar-tour" },
-      { name: "5 Days Zanzibar Safari Blue & Beach Holiday", path: "/zanzibar/5-days-zanzibar-safari-blue-beach" },
-      { name: "4 Days Zanzibar Stone Town & Spice Tour", path: "/zanzibar/4-days-zanzibar-stone-town-spice" }
+      { name: "8 Days Zanzibar Honeymoon Holiday", path: "/destinations/zanzibarhoneymoon" },
+      { name: "7 Days Zanzibar Island Holiday", path: "/destinations/zanzibarisland" },
+      { name: "6 Days Prison, Mnemba & Zanzibar Island Tour", path: "/destinations/prisonmnemba" },
+      { name: "6 Days Zanzibar Tour", path: "/destinations/6daytour" },
+      { name: "5 Days Zanzibar Safari Blue & Beach Holiday", path: "/destinations/ZanzibarSafariBlue" },
+      { name: "4 Days Zanzibar Stone Town & Spice Tour", path: "/destinations/ZanzibarStoneTown" }
     ]
   };
 
